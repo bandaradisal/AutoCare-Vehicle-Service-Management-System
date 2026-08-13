@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title th:text="${payment.paymentId == null
+            ? 'Record Payment - AutoCare'
+            : 'Edit Payment - AutoCare'}">
+        Payment - AutoCare
+    </title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background-color: #f4f6f8;
+        }
+
+        .header {
+            background-color: #1f2937;
+            color: white;
+            padding: 20px 40px;
+        }
+
+        .header h1 {
+            margin: 0;
+        }
+
+        .container {
+            width: 650px;
+            margin: 40px auto;
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+        }
+
+        h2 {
+            margin-top: 0;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: bold;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        .save-button {
+            background-color: #2563eb;
+            color: white;
+            border: none;
+            padding: 11px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .save-button:hover {
+            background-color: #1d4ed8;
+        }
+
+        .cancel-button {
+            margin-left: 10px;
+            text-decoration: none;
+            color: #374151;
+        }
+
+        .cancel-button:hover {
+            text-decoration: underline;
+        }
+
+        .info-box {
+            background-color: #eff6ff;
+            padding: 12px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            line-height: 1.5;
+        }
+    </style>
+
+</head>
+
+<body>
+
+<div class="header">
+
+    <h1>AutoCare</h1>
+
+    <p>
+        Vehicle Service & Maintenance Management System
+    </p>
+
+</div>
+
+<!-- DASHBOARD BUTTON -->
+<div th:replace="~{fragments/navigation :: homeButton}"></div>
+
+<div class="container">
+
+    <h2 th:text="${payment.paymentId == null
+            ? 'Record Payment'
+            : 'Edit Payment'}">
+
+        Payment
+
+    </h2>
+
+    <div class="info-box">
+
+        Completed payments automatically affect the related
+        invoice payment status.
+
+    </div>
+
+    <form th:action="@{/payments/save}"
+          th:object="${payment}"
+          method="post">
+
+        <!-- Keep Payment ID when editing -->
+        <input type="hidden"
+               th:field="*{paymentId}">
+
+
+        <!-- INVOICE -->
+
+        <div class="form-group">
+
+            <label>
+                Invoice
+            </label>
+
+            <select th:field="*{invoice.invoiceId}"
+                    required>
+
+                <option value="">
+                    -- Select Invoice --
+                </option>
+
+                <option th:each="invoice : ${invoices}"
+                        th:value="${invoice.invoiceId}"
+                        th:text="${'Invoice '
+                        + invoice.invoiceId
+                        + ' - '
+                        + invoice.booking.vehicle.registrationNo
+                        + ' - '
+                        + invoice.booking.vehicle.customer.firstName
+                        + ' '
+                        + invoice.booking.vehicle.customer.lastName
+                        + ' - Total: LKR '
+                        + invoice.totalAmount}">
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <!-- AMOUNT -->
+
+        <div class="form-group">
+
+            <label>
+                Payment Amount (LKR)
+            </label>
+
+            <input type="number"
+                   th:field="*{amount}"
+                   min="0.01"
+                   step="0.01"
+                   placeholder="Example: 10000"
+                   required>
+
+        </div>
+
+
+        <!-- PAYMENT METHOD -->
+
+        <div class="form-group">
+
+            <label>
+                Payment Method
+            </label>
+
+            <select th:field="*{paymentMethod}"
+                    required>
+
+                <option value="">
+                    -- Select Payment Method --
+                </option>
+
+                <option value="Cash">
+                    Cash
+                </option>
+
+                <option value="Card">
+                    Card
+                </option>
+
+                <option value="Bank Transfer">
+                    Bank Transfer
+                </option>
+
+                <option value="Online">
+                    Online
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <!-- PAYMENT STATUS -->
+
+        <div class="form-group">
+
+            <label>
+                Payment Status
+            </label>
+
+            <select th:field="*{paymentStatus}"
+                    required>
+
+                <option value="Completed">
+                    Completed
+                </option>
+
+                <option value="Pending">
+                    Pending
+                </option>
+
+                <option value="Failed">
+                    Failed
+                </option>
+
+                <option value="Refunded">
+                    Refunded
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <!-- REFERENCE NUMBER -->
+
+        <div class="form-group">
+
+            <label>
+                Reference Number
+            </label>
+
+            <input type="text"
+                   th:field="*{referenceNo}"
+                   placeholder="Example: PAY-2026-001">
+
+        </div>
+
+
+        <!-- SAVE -->
+
+        <button type="submit"
+                class="save-button"
+                th:text="${payment.paymentId == null
+                ? 'Record Payment'
+                : 'Update Payment'}">
+
+            Record Payment
+
+        </button>
+
+
+        <!-- CANCEL -->
+
+        <a th:href="@{/payments}"
+           class="cancel-button">
+
+            Cancel
+
+        </a>
+
+    </form>
+
+</div>
+
+</body>
+
+</html>

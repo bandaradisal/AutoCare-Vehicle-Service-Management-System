@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title th:text="${vehicle.vehicleId == null
+            ? 'Add Vehicle - AutoCare'
+            : 'Edit Vehicle - AutoCare'}">
+        Vehicle - AutoCare
+    </title>
+
+    <style>
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background-color: #f4f6f8;
+        }
+
+        .header {
+            background-color: #1f2937;
+            color: white;
+            padding: 20px 40px;
+        }
+
+        .header h1 {
+            margin: 0;
+        }
+
+        .container {
+            width: 600px;
+            margin: 40px auto;
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+        }
+
+        h2 {
+            margin-top: 0;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: bold;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        .save-button {
+            background-color: #2563eb;
+            color: white;
+            border: none;
+            padding: 11px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .save-button:hover {
+            background-color: #1d4ed8;
+        }
+
+        .cancel-button {
+            margin-left: 10px;
+            text-decoration: none;
+            color: #374151;
+        }
+
+        .cancel-button:hover {
+            text-decoration: underline;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="header">
+
+    <h1>AutoCare</h1>
+
+    <p>
+        Vehicle Service & Maintenance Management System
+    </p>
+
+</div>
+
+<!-- DASHBOARD BUTTON -->
+<div th:replace="~{fragments/navigation :: homeButton}"></div>
+
+<div class="container">
+
+    <h2 th:text="${vehicle.vehicleId == null
+            ? 'Add Vehicle'
+            : 'Edit Vehicle'}">
+
+        Vehicle
+
+    </h2>
+
+    <form th:action="@{/vehicles/save}"
+          th:object="${vehicle}"
+          method="post">
+
+        <!-- Keep Vehicle ID when editing -->
+        <input type="hidden"
+               th:field="*{vehicleId}">
+
+
+        <!-- CUSTOMER -->
+
+        <div class="form-group">
+
+            <label>
+                Customer / Vehicle Owner
+            </label>
+
+            <select th:field="*{customer.customerId}"
+                    required>
+
+                <option value="">
+                    -- Select Customer --
+                </option>
+
+                <option th:each="customer : ${customers}"
+                        th:value="${customer.customerId}"
+                        th:text="${customer.customerId
+                        + ' - '
+                        + customer.firstName
+                        + ' '
+                        + customer.lastName}">
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <!-- REGISTRATION NUMBER -->
+
+        <div class="form-group">
+
+            <label>
+                Registration Number
+            </label>
+
+            <input type="text"
+                   th:field="*{registrationNo}"
+                   placeholder="Example: CAA-1234"
+                   required>
+
+        </div>
+
+
+        <!-- BRAND -->
+
+        <div class="form-group">
+
+            <label>
+                Brand
+            </label>
+
+            <input type="text"
+                   th:field="*{brand}"
+                   placeholder="Example: Toyota"
+                   required>
+
+        </div>
+
+
+        <!-- MODEL -->
+
+        <div class="form-group">
+
+            <label>
+                Model
+            </label>
+
+            <input type="text"
+                   th:field="*{model}"
+                   placeholder="Example: Prius"
+                   required>
+
+        </div>
+
+
+        <!-- MANUFACTURE YEAR -->
+
+        <div class="form-group">
+
+            <label>
+                Manufacture Year
+            </label>
+
+            <input type="number"
+                   th:field="*{manufactureYear}"
+                   min="1950"
+                   max="2100"
+                   placeholder="Example: 2020">
+
+        </div>
+
+
+        <!-- FUEL TYPE -->
+
+        <div class="form-group">
+
+            <label>
+                Fuel Type
+            </label>
+
+            <select th:field="*{fuelType}">
+
+                <option value="">
+                    -- Select Fuel Type --
+                </option>
+
+                <option value="Petrol">
+                    Petrol
+                </option>
+
+                <option value="Diesel">
+                    Diesel
+                </option>
+
+                <option value="Hybrid">
+                    Hybrid
+                </option>
+
+                <option value="Electric">
+                    Electric
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <!-- CURRENT MILEAGE -->
+
+        <div class="form-group">
+
+            <label>
+                Current Mileage
+            </label>
+
+            <input type="number"
+                   th:field="*{currentMileage}"
+                   min="0"
+                   placeholder="Example: 75000">
+
+        </div>
+
+
+        <!-- SAVE -->
+
+        <button type="submit"
+                class="save-button"
+                th:text="${vehicle.vehicleId == null
+                ? 'Save Vehicle'
+                : 'Update Vehicle'}">
+
+            Save Vehicle
+
+        </button>
+
+
+        <!-- CANCEL -->
+
+        <a th:href="@{/vehicles}"
+           class="cancel-button">
+
+            Cancel
+
+        </a>
+
+    </form>
+
+</div>
+
+</body>
+
+</html>

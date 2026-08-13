@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title th:text="${sparePart.partId == null
+            ? 'Add Spare Part - AutoCare'
+            : 'Edit Spare Part - AutoCare'}">
+        Spare Part - AutoCare
+    </title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background-color: #f4f6f8;
+        }
+
+        .header {
+            background-color: #1f2937;
+            color: white;
+            padding: 20px 40px;
+        }
+
+        .header h1 {
+            margin: 0;
+        }
+
+        .container {
+            width: 650px;
+            margin: 40px auto;
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+        }
+
+        h2 {
+            margin-top: 0;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: bold;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        .save-button {
+            background-color: #2563eb;
+            color: white;
+            border: none;
+            padding: 11px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .save-button:hover {
+            background-color: #1d4ed8;
+        }
+
+        .cancel-button {
+            margin-left: 10px;
+            text-decoration: none;
+            color: #374151;
+        }
+
+        .cancel-button:hover {
+            text-decoration: underline;
+        }
+    </style>
+
+</head>
+
+<body>
+
+<div class="header">
+
+    <h1>AutoCare</h1>
+
+    <p>
+        Vehicle Service & Maintenance Management System
+    </p>
+
+</div>
+
+<!-- DASHBOARD BUTTON -->
+<div th:replace="~{fragments/navigation :: homeButton}"></div>
+
+<div class="container">
+
+    <h2 th:text="${sparePart.partId == null
+            ? 'Add Spare Part'
+            : 'Edit Spare Part'}">
+        Spare Part
+    </h2>
+
+    <form th:action="@{/spare-parts/save}"
+          th:object="${sparePart}"
+          method="post">
+
+        <!-- Keep ID when editing -->
+        <input type="hidden"
+               th:field="*{partId}">
+
+
+        <!-- PART NAME -->
+
+        <div class="form-group">
+
+            <label>
+                Part Name
+            </label>
+
+            <input type="text"
+                   th:field="*{partName}"
+                   placeholder="Example: Engine Oil Filter"
+                   required>
+
+        </div>
+
+
+        <!-- CATEGORY -->
+
+        <div class="form-group">
+
+            <label>
+                Part Category
+            </label>
+
+            <select th:field="*{partCategory}">
+
+                <option value="">
+                    -- Select Category --
+                </option>
+
+                <option value="Engine">
+                    Engine
+                </option>
+
+                <option value="Electrical">
+                    Electrical
+                </option>
+
+                <option value="Brake">
+                    Brake
+                </option>
+
+                <option value="Suspension">
+                    Suspension
+                </option>
+
+                <option value="Filter">
+                    Filter
+                </option>
+
+                <option value="Lubricant">
+                    Lubricant
+                </option>
+
+                <option value="General">
+                    General
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <!-- UNIT PRICE -->
+
+        <div class="form-group">
+
+            <label>
+                Unit Price (LKR)
+            </label>
+
+            <input type="number"
+                   th:field="*{unitPrice}"
+                   min="0"
+                   step="0.01"
+                   placeholder="Example: 4500"
+                   required>
+
+        </div>
+
+
+        <!-- QUANTITY -->
+
+        <div class="form-group">
+
+            <label>
+                Quantity In Stock
+            </label>
+
+            <input type="number"
+                   th:field="*{quantityInStock}"
+                   min="0"
+                   placeholder="Example: 25">
+
+        </div>
+
+
+        <!-- REORDER LEVEL -->
+
+        <div class="form-group">
+
+            <label>
+                Reorder Level
+            </label>
+
+            <input type="number"
+                   th:field="*{reorderLevel}"
+                   min="0"
+                   placeholder="Example: 5">
+
+        </div>
+
+
+        <!-- SUPPLIER -->
+
+        <div class="form-group">
+
+            <label>
+                Supplier Name
+            </label>
+
+            <input type="text"
+                   th:field="*{supplierName}"
+                   placeholder="Example: Lanka Auto Parts">
+
+        </div>
+
+
+        <!-- SAVE -->
+
+        <button type="submit"
+                class="save-button"
+                th:text="${sparePart.partId == null
+                ? 'Save Spare Part'
+                : 'Update Spare Part'}">
+
+            Save Spare Part
+
+        </button>
+
+
+        <!-- CANCEL -->
+
+        <a th:href="@{/spare-parts}"
+           class="cancel-button">
+
+            Cancel
+
+        </a>
+
+    </form>
+
+</div>
+
+</body>
+
+</html>

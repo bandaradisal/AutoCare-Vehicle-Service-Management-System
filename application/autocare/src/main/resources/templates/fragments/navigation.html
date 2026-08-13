@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+
+<body>
+
+<div th:fragment="homeButton"
+     style="
+        width:95%;
+        margin:18px auto 0 auto;
+        display:flex;
+        justify-content:space-between;
+        align-items:center;
+        gap:15px;
+        flex-wrap:wrap;
+     ">
+
+    <!-- LEFT SIDE - DASHBOARD BUTTON -->
+    <div>
+
+        <a th:href="@{/}"
+           style="
+                display:inline-block;
+                background-color:#2563eb;
+                color:white;
+                text-decoration:none;
+                padding:10px 17px;
+                border-radius:7px;
+                font-family:Arial,sans-serif;
+                font-weight:bold;
+                font-size:14px;
+                box-shadow:0 3px 8px rgba(0,0,0,0.12);
+           ">
+
+            ← Dashboard
+
+        </a>
+
+    </div>
+
+
+    <!-- RIGHT SIDE - LOGGED IN USER -->
+    <div style="
+            display:flex;
+            align-items:center;
+            gap:12px;
+            font-family:Arial,sans-serif;
+         ">
+
+        <!-- USER INFORMATION -->
+        <div style="
+                display:flex;
+                align-items:center;
+                gap:10px;
+                background:#ffffff;
+                border:1px solid #e5e7eb;
+                padding:7px 13px;
+                border-radius:8px;
+                box-shadow:0 2px 7px rgba(0,0,0,0.08);
+             ">
+
+            <!-- USER ICON -->
+            <div style="
+                    width:35px;
+                    height:35px;
+                    border-radius:50%;
+                    background:#1e293b;
+                    color:white;
+                    display:flex;
+                    align-items:center;
+                    justify-content:center;
+                    font-weight:bold;
+                    font-size:15px;
+                 ">
+
+                <span th:text="${currentUsername != null
+                        ? #strings.substring(currentUsername,0,1).toUpperCase()
+                        : 'U'}">
+                    U
+                </span>
+
+            </div>
+
+
+            <!-- USERNAME AND ROLE -->
+            <div style="line-height:1.25;">
+
+                <div style="
+                        font-weight:bold;
+                        color:#111827;
+                        font-size:14px;
+                     "
+                     th:text="${currentUsername}">
+                    admin
+                </div>
+
+                <div style="
+                        color:#6b7280;
+                        font-size:11px;
+                        font-weight:bold;
+                        letter-spacing:0.5px;
+                     "
+                     th:text="${currentRole}">
+                    ADMIN
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- LOGOUT FORM -->
+        <form th:action="@{/logout}"
+              method="post"
+              style="margin:0;">
+
+            <!-- CSRF TOKEN -->
+            <input type="hidden"
+                   th:if="${_csrf != null}"
+                   th:name="${_csrf.parameterName}"
+                   th:value="${_csrf.token}">
+
+            <button type="submit"
+                    style="
+                        border:none;
+                        background:#dc2626;
+                        color:white;
+                        padding:10px 16px;
+                        border-radius:7px;
+                        font-weight:bold;
+                        font-size:13px;
+                        cursor:pointer;
+                        font-family:Arial,sans-serif;
+                        box-shadow:0 3px 8px rgba(0,0,0,0.12);
+                    ">
+
+                Logout
+
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+</body>
+</html>

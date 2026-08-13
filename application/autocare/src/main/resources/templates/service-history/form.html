@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title th:text="${serviceHistory.historyId == null
+            ? 'Add Service History - AutoCare'
+            : 'Edit Service History - AutoCare'}">
+
+        Service History - AutoCare
+
+    </title>
+
+    <style>
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background-color: #f4f6f8;
+        }
+
+        .header {
+            background-color: #1f2937;
+            color: white;
+            padding: 20px 40px;
+        }
+
+        .header h1 {
+            margin: 0;
+        }
+
+        .container {
+            width: 650px;
+            margin: 40px auto;
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+        }
+
+        h2 {
+            margin-top: 0;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: bold;
+        }
+
+        input,
+        select,
+        textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        textarea {
+            min-height: 130px;
+            resize: vertical;
+        }
+
+        .info-box {
+            background-color: #eff6ff;
+            padding: 12px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            line-height: 1.5;
+        }
+
+        .save-button {
+            background-color: #2563eb;
+            color: white;
+            border: none;
+            padding: 11px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .save-button:hover {
+            background-color: #1d4ed8;
+        }
+
+        .cancel-button {
+            margin-left: 10px;
+            text-decoration: none;
+            color: #374151;
+        }
+
+        .cancel-button:hover {
+            text-decoration: underline;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+
+<div class="header">
+
+    <h1>
+        AutoCare
+    </h1>
+
+    <p>
+        Vehicle Service & Maintenance Management System
+    </p>
+
+</div>
+
+
+<!-- DASHBOARD BUTTON -->
+<div th:replace="~{fragments/navigation :: homeButton}"></div>
+
+
+<div class="container">
+
+    <h2 th:text="${serviceHistory.historyId == null
+            ? 'Add Service History'
+            : 'Edit Service History'}">
+
+        Service History
+
+    </h2>
+
+
+    <div class="info-box">
+
+        Service History records are stored in
+        <strong>MongoDB</strong>.
+
+        <br><br>
+
+        Vehicle ID, Service Type and Service Date are automatically
+        obtained from the selected
+        <strong>Oracle Service Booking</strong>.
+
+    </div>
+
+
+    <form th:action="@{/service-history/save}"
+          th:object="${serviceHistory}"
+          method="post">
+
+
+        <!-- MongoDB internal ID -->
+
+        <input type="hidden"
+               th:field="*{id}">
+
+
+        <!-- HISTORY ID -->
+
+        <div class="form-group">
+
+            <label>
+                History ID
+            </label>
+
+            <input type="text"
+                   th:field="*{historyId}"
+                   placeholder="Example: SH002"
+                   th:readonly="${serviceHistory.historyId != null}"
+                   required>
+
+        </div>
+
+
+        <!-- ORACLE SERVICE BOOKING -->
+
+        <div class="form-group">
+
+            <label>
+                Service Booking
+            </label>
+
+            <select th:field="*{bookingId}"
+                    required>
+
+                <option value="">
+                    -- Select Service Booking --
+                </option>
+
+                <option th:each="booking : ${bookings}"
+                        th:value="${booking.bookingId}"
+                        th:text="${'Booking '
+                        + booking.bookingId
+                        + ' - '
+                        + booking.vehicle.registrationNo
+                        + ' - '
+                        + booking.serviceType
+                        + ' - '
+                        + booking.serviceDate}">
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <!-- MILEAGE -->
+
+        <div class="form-group">
+
+            <label>
+                Mileage
+            </label>
+
+            <input type="number"
+                   th:field="*{mileage}"
+                   min="0"
+                   placeholder="Example: 80000">
+
+        </div>
+
+
+        <!-- SERVICE SUMMARY -->
+
+        <div class="form-group">
+
+            <label>
+                Service Summary
+            </label>
+
+            <textarea th:field="*{summary}"
+                      placeholder="Enter service summary"
+                      required></textarea>
+
+        </div>
+
+
+        <!-- SAVE BUTTON -->
+
+        <button type="submit"
+                class="save-button"
+                th:text="${serviceHistory.historyId == null
+                ? 'Save Service History'
+                : 'Update Service History'}">
+
+            Save Service History
+
+        </button>
+
+
+        <!-- CANCEL BUTTON -->
+
+        <a th:href="@{/service-history}"
+           class="cancel-button">
+
+            Cancel
+
+        </a>
+
+    </form>
+
+</div>
+
+
+</body>
+
+</html>

@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title th:text="${technicianNote.noteId == null
+            ? 'Add Technician Note - AutoCare'
+            : 'Edit Technician Note - AutoCare'}">
+
+        Technician Note - AutoCare
+
+    </title>
+
+    <style>
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background-color: #f4f6f8;
+        }
+
+        .header {
+            background-color: #1f2937;
+            color: white;
+            padding: 20px 40px;
+        }
+
+        .header h1 {
+            margin: 0;
+        }
+
+        .container {
+            width: 650px;
+            margin: 40px auto;
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+        }
+
+        h2 {
+            margin-top: 0;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: bold;
+        }
+
+        input,
+        select,
+        textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        .info-box {
+            background-color: #eff6ff;
+            padding: 12px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            line-height: 1.5;
+        }
+
+        .note-help {
+            font-size: 13px;
+            color: #6b7280;
+            margin-top: 6px;
+            line-height: 1.5;
+        }
+
+        .save-button {
+            background-color: #2563eb;
+            color: white;
+            border: none;
+            padding: 11px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .save-button:hover {
+            background-color: #1d4ed8;
+        }
+
+        .cancel-button {
+            margin-left: 10px;
+            text-decoration: none;
+            color: #374151;
+        }
+
+        .cancel-button:hover {
+            text-decoration: underline;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+
+<div class="header">
+
+    <h1>
+        AutoCare
+    </h1>
+
+    <p>
+        Vehicle Service & Maintenance Management System
+    </p>
+
+</div>
+
+
+<!-- DASHBOARD BUTTON -->
+<div th:replace="~{fragments/navigation :: homeButton}"></div>
+
+
+<div class="container">
+
+    <h2 th:text="${technicianNote.noteId == null
+            ? 'Add Technician Note'
+            : 'Edit Technician Note'}">
+
+        Technician Note
+
+    </h2>
+
+
+    <div class="info-box">
+
+        Technician notes are stored in
+        <strong>MongoDB</strong>.
+
+        <br>
+
+        Technician information comes from
+        <strong>Oracle Database</strong>,
+        while Job Card information comes from
+        <strong>MongoDB</strong>.
+
+    </div>
+
+
+    <form th:action="@{/technician-notes/save}"
+          th:object="${technicianNote}"
+          method="post">
+
+
+        <!-- MongoDB internal document ID -->
+
+        <input type="hidden"
+               th:field="*{id}">
+
+
+        <!-- NOTE ID -->
+
+        <div class="form-group">
+
+            <label>
+                Note ID
+            </label>
+
+            <input type="text"
+                   th:field="*{noteId}"
+                   placeholder="Example: TN002"
+                   th:readonly="${technicianNote.noteId != null}"
+                   required>
+
+        </div>
+
+
+        <!-- JOB CARD -->
+
+        <div class="form-group">
+
+            <label>
+                Job Card
+            </label>
+
+            <select th:field="*{jobCardId}"
+                    required>
+
+                <option value="">
+                    -- Select Job Card --
+                </option>
+
+                <option th:each="jobCard : ${jobCards}"
+                        th:value="${jobCard.jobCardId}"
+                        th:text="${jobCard.jobCardId
+                        + ' - Booking '
+                        + jobCard.bookingId
+                        + ' - Vehicle '
+                        + jobCard.vehicleId
+                        + ' - '
+                        + jobCard.status}">
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <!-- TECHNICIAN -->
+
+        <div class="form-group">
+
+            <label>
+                Technician
+            </label>
+
+            <select th:field="*{technicianId}"
+                    required>
+
+                <option value="">
+                    -- Select Technician --
+                </option>
+
+                <option th:each="technician : ${technicians}"
+                        th:value="${technician.technicianId}"
+                        th:text="${technician.technicianId
+                        + ' - '
+                        + technician.firstName
+                        + ' '
+                        + technician.lastName
+                        + ' - '
+                        + technician.specialization}">
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <!-- NOTES -->
+
+        <div class="form-group">
+
+            <label>
+                Technician Notes
+            </label>
+
+            <textarea name="noteText"
+                      th:text="${noteText}"
+                      placeholder="Enter one note per line"
+                      required></textarea>
+
+            <div class="note-help">
+
+                Enter each note on a separate line.
+
+                <br><br>
+
+                Example:
+
+                <br>
+                Checked engine oil
+
+                <br>
+                Replaced oil filter
+
+                <br>
+                Tested brake system
+
+            </div>
+
+        </div>
+
+
+        <!-- SAVE -->
+
+        <button type="submit"
+                class="save-button"
+                th:text="${technicianNote.noteId == null
+                ? 'Save Technician Note'
+                : 'Update Technician Note'}">
+
+            Save Technician Note
+
+        </button>
+
+
+        <!-- CANCEL -->
+
+        <a th:href="@{/technician-notes}"
+           class="cancel-button">
+
+            Cancel
+
+        </a>
+
+    </form>
+
+</div>
+
+
+</body>
+
+</html>

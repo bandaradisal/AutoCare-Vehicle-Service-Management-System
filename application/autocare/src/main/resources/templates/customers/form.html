@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title th:text="${customer.customerId == null ? 'Add Customer - AutoCare' : 'Edit Customer - AutoCare'}">
+        Customer - AutoCare
+    </title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background-color: #f4f6f8;
+        }
+
+        .header {
+            background-color: #1f2937;
+            color: white;
+            padding: 20px 40px;
+        }
+
+        .header h1 {
+            margin: 0;
+        }
+
+        .container {
+            width: 600px;
+            margin: 40px auto;
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+        }
+
+        h2 {
+            margin-top: 0;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: bold;
+        }
+
+        input,
+        textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        textarea {
+            resize: vertical;
+        }
+
+        .save-button {
+            background-color: #2563eb;
+            color: white;
+            border: none;
+            padding: 11px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .save-button:hover {
+            background-color: #1d4ed8;
+        }
+
+        .cancel-button {
+            margin-left: 10px;
+            text-decoration: none;
+            color: #374151;
+        }
+
+        .cancel-button:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="header">
+    <h1>AutoCare</h1>
+    <p>Vehicle Service & Maintenance Management System</p>
+</div>
+
+<!-- DASHBOARD BUTTON -->
+<div th:replace="~{fragments/navigation :: homeButton}"></div>
+
+<div class="container">
+
+    <h2 th:text="${customer.customerId == null ? 'Add Customer' : 'Edit Customer'}">
+        Customer
+    </h2>
+
+    <form th:action="@{/customers/save}"
+          th:object="${customer}"
+          method="post">
+
+        <!-- Keep customer ID while editing -->
+        <input type="hidden"
+               th:field="*{customerId}">
+
+        <div class="form-group">
+            <label>First Name</label>
+
+            <input type="text"
+                   th:field="*{firstName}"
+                   placeholder="Enter first name"
+                   required>
+        </div>
+
+        <div class="form-group">
+            <label>Last Name</label>
+
+            <input type="text"
+                   th:field="*{lastName}"
+                   placeholder="Enter last name"
+                   required>
+        </div>
+
+        <div class="form-group">
+            <label>NIC</label>
+
+            <input type="text"
+                   th:field="*{nic}"
+                   placeholder="Enter NIC"
+                   required>
+        </div>
+
+        <div class="form-group">
+            <label>Phone</label>
+
+            <input type="text"
+                   th:field="*{phone}"
+                   placeholder="Enter phone number"
+                   required>
+        </div>
+
+        <div class="form-group">
+            <label>Email</label>
+
+            <input type="email"
+                   th:field="*{email}"
+                   placeholder="Enter email address">
+        </div>
+
+        <div class="form-group">
+            <label>Address</label>
+
+            <textarea th:field="*{address}"
+                      rows="3"
+                      placeholder="Enter address"></textarea>
+        </div>
+
+        <button type="submit"
+                class="save-button"
+                th:text="${customer.customerId == null ? 'Save Customer' : 'Update Customer'}">
+            Save Customer
+        </button>
+
+        <a th:href="@{/customers}"
+           class="cancel-button">
+            Cancel
+        </a>
+
+    </form>
+
+</div>
+
+</body>
+
+</html>

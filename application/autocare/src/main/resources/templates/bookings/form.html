@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title th:text="${booking.bookingId == null
+            ? 'Add Booking - AutoCare'
+            : 'Edit Booking - AutoCare'}">
+        Booking - AutoCare
+    </title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background-color: #f4f6f8;
+        }
+
+        .header {
+            background-color: #1f2937;
+            color: white;
+            padding: 20px 40px;
+        }
+
+        .header h1 {
+            margin: 0;
+        }
+
+        .container {
+            width: 650px;
+            margin: 40px auto;
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+        }
+
+        h2 {
+            margin-top: 0;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: bold;
+        }
+
+        input,
+        select,
+        textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        textarea {
+            resize: vertical;
+        }
+
+        .save-button {
+            background-color: #2563eb;
+            color: white;
+            border: none;
+            padding: 11px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .save-button:hover {
+            background-color: #1d4ed8;
+        }
+
+        .cancel-button {
+            margin-left: 10px;
+            text-decoration: none;
+            color: #374151;
+        }
+
+        .cancel-button:hover {
+            text-decoration: underline;
+        }
+    </style>
+
+</head>
+
+<body>
+
+<div class="header">
+
+    <h1>AutoCare</h1>
+
+    <p>
+        Vehicle Service & Maintenance Management System
+    </p>
+
+</div>
+
+<!-- DASHBOARD BUTTON -->
+<div th:replace="~{fragments/navigation :: homeButton}"></div>
+
+<div class="container">
+
+    <h2 th:text="${booking.bookingId == null
+            ? 'Add Service Booking'
+            : 'Edit Service Booking'}">
+        Service Booking
+    </h2>
+
+    <form th:action="@{/bookings/save}"
+          th:object="${booking}"
+          method="post">
+
+        <!-- Keep Booking ID when editing -->
+        <input type="hidden"
+               th:field="*{bookingId}">
+
+
+        <!-- VEHICLE -->
+
+        <div class="form-group">
+
+            <label>
+                Vehicle
+            </label>
+
+            <select th:field="*{vehicle.vehicleId}"
+                    required>
+
+                <option value="">
+                    -- Select Vehicle --
+                </option>
+
+                <option th:each="vehicle : ${vehicles}"
+                        th:value="${vehicle.vehicleId}"
+                        th:text="${vehicle.registrationNo
+                        + ' - '
+                        + vehicle.brand
+                        + ' '
+                        + vehicle.model
+                        + ' - '
+                        + vehicle.customer.firstName
+                        + ' '
+                        + vehicle.customer.lastName}">
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <!-- SERVICE DATE -->
+
+        <div class="form-group">
+
+            <label>
+                Service Date
+            </label>
+
+            <input type="date"
+                   th:field="*{serviceDate}"
+                   required>
+
+        </div>
+
+
+        <!-- SERVICE TYPE -->
+
+        <div class="form-group">
+
+            <label>
+                Service Type
+            </label>
+
+            <select th:field="*{serviceType}"
+                    required>
+
+                <option value="">
+                    -- Select Service Type --
+                </option>
+
+                <option value="Full Service">
+                    Full Service
+                </option>
+
+                <option value="Oil Change">
+                    Oil Change
+                </option>
+
+                <option value="Brake Service">
+                    Brake Service
+                </option>
+
+                <option value="Engine Repair">
+                    Engine Repair
+                </option>
+
+                <option value="Electrical Repair">
+                    Electrical Repair
+                </option>
+
+                <option value="Inspection">
+                    Inspection
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <!-- DESCRIPTION -->
+
+        <div class="form-group">
+
+            <label>
+                Description
+            </label>
+
+            <textarea th:field="*{description}"
+                      rows="3"
+                      placeholder="Enter service description">
+            </textarea>
+
+        </div>
+
+
+        <!-- ESTIMATED COST -->
+
+        <div class="form-group">
+
+            <label>
+                Estimated Cost (LKR)
+            </label>
+
+            <input type="number"
+                   th:field="*{estimatedCost}"
+                   min="0"
+                   step="0.01"
+                   placeholder="Example: 15000">
+
+        </div>
+
+
+        <!-- BOOKING STATUS -->
+
+        <div class="form-group">
+
+            <label>
+                Booking Status
+            </label>
+
+            <select th:field="*{bookingStatus}"
+                    required>
+
+                <option value="Pending">
+                    Pending
+                </option>
+
+                <option value="Confirmed">
+                    Confirmed
+                </option>
+
+                <option value="In Progress">
+                    In Progress
+                </option>
+
+                <option value="Completed">
+                    Completed
+                </option>
+
+                <option value="Cancelled">
+                    Cancelled
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <!-- SAVE -->
+
+        <button type="submit"
+                class="save-button"
+                th:text="${booking.bookingId == null
+                ? 'Save Booking'
+                : 'Update Booking'}">
+
+            Save Booking
+
+        </button>
+
+
+        <!-- CANCEL -->
+
+        <a th:href="@{/bookings}"
+           class="cancel-button">
+
+            Cancel
+
+        </a>
+
+    </form>
+
+</div>
+
+</body>
+
+</html>

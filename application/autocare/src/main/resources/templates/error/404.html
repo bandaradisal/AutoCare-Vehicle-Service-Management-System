@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Page Not Found - AutoCare</title>
+
+    <style>
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background-color: #f4f6f8;
+        }
+
+        .header {
+            background-color: #1f2937;
+            color: white;
+            padding: 20px 40px;
+        }
+
+        .header h1 {
+            margin: 0;
+        }
+
+        .container {
+            width: 600px;
+            margin: 80px auto;
+            background-color: white;
+            padding: 40px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .error-code {
+            font-size: 70px;
+            font-weight: bold;
+            color: #dc2626;
+            margin-bottom: 10px;
+        }
+
+        h2 {
+            color: #1f2937;
+            margin-bottom: 15px;
+        }
+
+        .message {
+            color: #6b7280;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        .dashboard-button {
+            display: inline-block;
+            background-color: #2563eb;
+            color: white;
+            padding: 11px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-right: 8px;
+        }
+
+        .dashboard-button:hover {
+            background-color: #1d4ed8;
+        }
+
+        .back-button {
+            background-color: #6b7280;
+            color: white;
+            padding: 11px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .back-button:hover {
+            background-color: #4b5563;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+
+<div class="header">
+
+    <h1>
+        AutoCare
+    </h1>
+
+    <p>
+        Vehicle Service & Maintenance Management System
+    </p>
+
+</div>
+
+
+<div class="container">
+
+    <div class="error-code">
+        404
+    </div>
+
+    <h2>
+        Page Not Found
+    </h2>
+
+    <div class="message">
+
+        The page you are trying to access does not exist.
+
+        <br>
+
+        Please check the address or return to the AutoCare Dashboard.
+
+    </div>
+
+
+    <a th:href="@{/}"
+       class="dashboard-button">
+
+        ← Dashboard
+
+    </a>
+
+
+    <button type="button"
+            class="back-button"
+            onclick="history.back()">
+
+        Go Back
+
+    </button>
+
+</div>
+
+
+</body>
+
+</html>

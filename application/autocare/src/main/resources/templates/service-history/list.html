@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>
+        Service History - AutoCare
+    </title>
+
+    <style>
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background-color: #f4f6f8;
+        }
+
+        .header {
+            background-color: #1f2937;
+            color: white;
+            padding: 20px 40px;
+        }
+
+        .header h1 {
+            margin: 0;
+        }
+
+        .container {
+            width: 95%;
+            margin: 30px auto;
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .add-button {
+            background-color: #2563eb;
+            color: white;
+            padding: 10px 18px;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+
+        .add-button:hover {
+            background-color: #1d4ed8;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: white;
+        }
+
+        th,
+        td {
+            padding: 11px;
+            border-bottom: 1px solid #ddd;
+            text-align: left;
+            vertical-align: top;
+        }
+
+        th {
+            background-color: #e5e7eb;
+        }
+
+        tr:hover {
+            background-color: #f9fafb;
+        }
+
+        .parts-list {
+            margin: 0;
+            padding-left: 18px;
+        }
+
+        .edit-button {
+            background-color: #f59e0b;
+            color: white;
+            padding: 7px 12px;
+            text-decoration: none;
+            border-radius: 5px;
+            display: inline-block;
+            margin-right: 5px;
+        }
+
+        .edit-button:hover {
+            background-color: #d97706;
+        }
+
+        .delete-form {
+            display: inline;
+        }
+
+        .delete-button {
+            background-color: #dc2626;
+            color: white;
+            padding: 7px 12px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .delete-button:hover {
+            background-color: #b91c1c;
+        }
+
+        .empty-message {
+            padding: 20px;
+            background-color: white;
+            text-align: center;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+
+<div class="header">
+
+    <h1>
+        AutoCare
+    </h1>
+
+    <p>
+        Vehicle Service & Maintenance Management System
+    </p>
+
+</div>
+
+
+<!-- DASHBOARD BUTTON -->
+<div th:replace="~{fragments/navigation :: homeButton}"></div>
+
+
+<div class="container">
+
+
+    <div class="top-bar">
+
+        <h2>
+            Service History - MongoDB
+        </h2>
+
+        <a th:href="@{/service-history/new}"
+           class="add-button">
+
+            + Add Service History
+
+        </a>
+
+    </div>
+
+
+    <!-- SERVICE HISTORY TABLE -->
+
+    <table th:if="${serviceHistoryList != null
+            and !serviceHistoryList.isEmpty()}">
+
+        <thead>
+
+        <tr>
+
+            <th>History ID</th>
+            <th>Vehicle ID</th>
+            <th>Booking ID</th>
+            <th>Service Date</th>
+            <th>Service Type</th>
+            <th>Mileage</th>
+            <th>Summary</th>
+            <th>Parts Used</th>
+            <th>Actions</th>
+
+        </tr>
+
+        </thead>
+
+
+        <tbody>
+
+        <tr th:each="history : ${serviceHistoryList}">
+
+
+            <!-- HISTORY ID -->
+
+            <td>
+
+                <strong th:text="${history.historyId}">
+                    SH001
+                </strong>
+
+            </td>
+
+
+            <!-- VEHICLE ID -->
+
+            <td>
+
+                <span th:if="${history.vehicleId != null}"
+                      th:text="${history.vehicleId}">
+                </span>
+
+                <span th:if="${history.vehicleId == null}">
+                    -
+                </span>
+
+            </td>
+
+
+            <!-- BOOKING ID -->
+
+            <td>
+
+                <span th:if="${history.bookingId != null}"
+                      th:text="${history.bookingId}">
+                </span>
+
+                <span th:if="${history.bookingId == null}">
+                    -
+                </span>
+
+            </td>
+
+
+            <!-- SERVICE DATE -->
+
+            <td>
+
+                <span th:if="${history.serviceDate != null}"
+                      th:text="${history.serviceDate}">
+                </span>
+
+                <span th:if="${history.serviceDate == null}">
+                    -
+                </span>
+
+            </td>
+
+
+            <!-- SERVICE TYPE -->
+
+            <td>
+
+                <span th:if="${history.serviceType != null}"
+                      th:text="${history.serviceType}">
+                </span>
+
+                <span th:if="${history.serviceType == null}">
+                    -
+                </span>
+
+            </td>
+
+
+            <!-- MILEAGE -->
+
+            <td>
+
+                <span th:if="${history.mileage != null}"
+                      th:text="${history.mileage}">
+                </span>
+
+                <span th:if="${history.mileage == null}">
+                    -
+                </span>
+
+            </td>
+
+
+            <!-- SUMMARY -->
+
+            <td>
+
+                <span th:if="${history.summary != null
+                        and !history.summary.isBlank()}"
+                      th:text="${history.summary}">
+                </span>
+
+                <span th:if="${history.summary == null
+                        or history.summary.isBlank()}">
+                    -
+                </span>
+
+            </td>
+
+
+            <!-- PARTS USED -->
+
+            <td>
+
+                <ul class="parts-list"
+                    th:if="${history.partsUsed != null
+                    and !history.partsUsed.isEmpty()}">
+
+                    <li th:each="part : ${history.partsUsed}"
+                        th:text="${part}">
+
+                        Part details
+
+                    </li>
+
+                </ul>
+
+
+                <span th:if="${history.partsUsed == null
+                        or history.partsUsed.isEmpty()}">
+
+                    No parts recorded
+
+                </span>
+
+            </td>
+
+
+            <!-- ACTIONS -->
+
+            <td>
+
+
+                <!-- EDIT USING CUSTOM HISTORY ID -->
+
+                <a class="edit-button"
+                   th:href="@{/service-history/edit/{historyId}
+                   (historyId=${history.historyId})}">
+
+                    Edit
+
+                </a>
+
+
+                <!-- DELETE USING CUSTOM HISTORY ID -->
+
+                <form class="delete-form"
+                      th:action="@{/service-history/delete/{historyId}
+                      (historyId=${history.historyId})}"
+                      method="post"
+                      onsubmit="return confirm('Are you sure you want to delete this service history record?');">
+
+                    <button type="submit"
+                            class="delete-button">
+
+                        Delete
+
+                    </button>
+
+                </form>
+
+            </td>
+
+        </tr>
+
+        </tbody>
+
+    </table>
+
+
+    <!-- EMPTY MESSAGE -->
+
+    <div class="empty-message"
+         th:if="${serviceHistoryList == null
+         or serviceHistoryList.isEmpty()}">
+
+        No MongoDB service history records found.
+
+    </div>
+
+
+</div>
+
+</body>
+
+</html>

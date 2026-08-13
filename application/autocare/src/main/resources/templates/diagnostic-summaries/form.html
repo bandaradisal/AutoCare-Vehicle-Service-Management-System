@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title th:text="${diagnosticSummary.diagnosticId == null
+            ? 'Add Diagnostic Summary - AutoCare'
+            : 'Edit Diagnostic Summary - AutoCare'}">
+
+        Diagnostic Summary - AutoCare
+
+    </title>
+
+    <style>
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background-color: #f4f6f8;
+        }
+
+        .header {
+            background-color: #1f2937;
+            color: white;
+            padding: 20px 40px;
+        }
+
+        .header h1 {
+            margin: 0;
+        }
+
+        .container {
+            width: 650px;
+            margin: 40px auto;
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+        }
+
+        h2 {
+            margin-top: 0;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: bold;
+        }
+
+        input,
+        select,
+        textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .info-box {
+            background-color: #eff6ff;
+            padding: 12px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            line-height: 1.5;
+        }
+
+        .help-text {
+            font-size: 13px;
+            color: #6b7280;
+            margin-top: 6px;
+            line-height: 1.5;
+        }
+
+        .save-button {
+            background-color: #2563eb;
+            color: white;
+            border: none;
+            padding: 11px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .save-button:hover {
+            background-color: #1d4ed8;
+        }
+
+        .cancel-button {
+            margin-left: 10px;
+            text-decoration: none;
+            color: #374151;
+        }
+
+        .cancel-button:hover {
+            text-decoration: underline;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+
+<div class="header">
+
+    <h1>
+        AutoCare
+    </h1>
+
+    <p>
+        Vehicle Service & Maintenance Management System
+    </p>
+
+</div>
+
+
+<!-- DASHBOARD BUTTON -->
+<div th:replace="~{fragments/navigation :: homeButton}"></div>
+
+
+<div class="container">
+
+
+    <h2 th:text="${diagnosticSummary.diagnosticId == null
+            ? 'Add Diagnostic Summary'
+            : 'Edit Diagnostic Summary'}">
+
+        Diagnostic Summary
+
+    </h2>
+
+
+    <div class="info-box">
+
+        Diagnostic summaries are stored in
+        <strong>MongoDB</strong>.
+
+        <br><br>
+
+        Vehicle information comes from
+        <strong>Oracle Database</strong>.
+
+        <br>
+
+        Job Card information comes from
+        <strong>MongoDB</strong>.
+
+    </div>
+
+
+    <form th:action="@{/diagnostic-summaries/save}"
+          th:object="${diagnosticSummary}"
+          method="post">
+
+
+        <!-- MongoDB internal document ID -->
+
+        <input type="hidden"
+               th:field="*{id}">
+
+
+        <!-- DIAGNOSTIC ID -->
+
+        <div class="form-group">
+
+            <label>
+                Diagnostic ID
+            </label>
+
+            <input type="text"
+                   th:field="*{diagnosticId}"
+                   placeholder="Example: DG002"
+                   th:readonly="${diagnosticSummary.diagnosticId != null}"
+                   required>
+
+        </div>
+
+
+        <!-- ORACLE VEHICLE -->
+
+        <div class="form-group">
+
+            <label>
+                Vehicle
+            </label>
+
+            <select th:field="*{vehicleId}"
+                    required>
+
+                <option value="">
+                    -- Select Vehicle --
+                </option>
+
+                <option th:each="vehicle : ${vehicles}"
+                        th:value="${vehicle.vehicleId}"
+                        th:text="${vehicle.vehicleId
+                        + ' - '
+                        + vehicle.registrationNo
+                        + ' - '
+                        + vehicle.brand
+                        + ' '
+                        + vehicle.model}">
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <!-- MONGODB JOB CARD -->
+
+        <div class="form-group">
+
+            <label>
+                Job Card
+            </label>
+
+            <select th:field="*{jobCardId}">
+
+                <option value="">
+                    -- No Job Card --
+                </option>
+
+                <option th:each="jobCard : ${jobCards}"
+                        th:value="${jobCard.jobCardId}"
+                        th:text="${jobCard.jobCardId
+                        + ' - Vehicle '
+                        + jobCard.vehicleId
+                        + ' - '
+                        + jobCard.status}">
+                </option>
+
+            </select>
+
+            <div class="help-text">
+
+                If you select a Job Card, it must belong
+                to the same vehicle selected above.
+
+            </div>
+
+        </div>
+
+
+        <!-- MILEAGE -->
+
+        <div class="form-group">
+
+            <label>
+                Mileage
+            </label>
+
+            <input type="number"
+                   th:field="*{mileage}"
+                   min="0"
+                   placeholder="Example: 80000">
+
+            <div class="help-text">
+
+                If this is left empty, the current mileage
+                from the Oracle vehicle record will be used.
+
+            </div>
+
+        </div>
+
+
+        <!-- BATTERY VOLTAGE -->
+
+        <div class="form-group">
+
+            <label>
+                Battery Voltage (V)
+            </label>
+
+            <input type="number"
+                   step="0.1"
+                   min="0"
+                   th:field="*{batteryVoltage}"
+                   placeholder="Example: 12.6">
+
+        </div>
+
+
+        <!-- ENGINE TEMPERATURE -->
+
+        <div class="form-group">
+
+            <label>
+                Engine Temperature (°C)
+            </label>
+
+            <input type="number"
+                   step="0.1"
+                   th:field="*{engineTemperature}"
+                   placeholder="Example: 89.5">
+
+        </div>
+
+
+        <!-- DIAGNOSTIC SUMMARY -->
+
+        <div class="form-group">
+
+            <label>
+                Diagnostic Summary
+            </label>
+
+            <textarea th:field="*{summary}"
+                      placeholder="Enter diagnostic summary"
+                      required></textarea>
+
+        </div>
+
+
+        <!-- ERROR CODES -->
+
+        <div class="form-group">
+
+            <label>
+                Error Codes
+            </label>
+
+            <textarea name="errorCodeText"
+                      th:text="${errorCodeText}"
+                      placeholder="Enter one error code per line"></textarea>
+
+            <div class="help-text">
+
+                Enter one diagnostic error code per line.
+
+                <br><br>
+
+                Example:
+
+                <br>
+                P0300
+
+                <br>
+                P0420
+
+            </div>
+
+        </div>
+
+
+        <!-- SAVE -->
+
+        <button type="submit"
+                class="save-button"
+                th:text="${diagnosticSummary.diagnosticId == null
+                ? 'Save Diagnostic Summary'
+                : 'Update Diagnostic Summary'}">
+
+            Save Diagnostic Summary
+
+        </button>
+
+
+        <!-- CANCEL -->
+
+        <a th:href="@{/diagnostic-summaries}"
+           class="cancel-button">
+
+            Cancel
+
+        </a>
+
+
+    </form>
+
+</div>
+
+
+</body>
+
+</html>

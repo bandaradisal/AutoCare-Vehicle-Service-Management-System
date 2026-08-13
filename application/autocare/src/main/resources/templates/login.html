@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>AutoCare | Login</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            font-family: Arial, Helvetica, sans-serif;
+            background:
+                radial-gradient(circle at top left, rgba(255, 70, 70, 0.13), transparent 35%),
+                radial-gradient(circle at bottom right, rgba(120, 120, 120, 0.10), transparent 35%),
+                #070707;
+            color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 30px;
+        }
+
+        .login-wrapper {
+            width: 100%;
+            max-width: 1050px;
+            min-height: 620px;
+            background: rgba(18, 18, 18, 0.94);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 28px;
+            overflow: hidden;
+            display: grid;
+            grid-template-columns: 1.1fr 0.9fr;
+            box-shadow: 0 30px 80px rgba(0,0,0,0.65);
+        }
+
+        .brand-side {
+            padding: 70px;
+            background:
+                linear-gradient(
+                    135deg,
+                    rgba(255, 45, 45, 0.10),
+                    rgba(0, 0, 0, 0.30)
+                );
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+        }
+
+        .brand-name {
+            font-size: 34px;
+            font-weight: 800;
+            letter-spacing: 1px;
+        }
+
+        .brand-name span {
+            color: #ff3b3b;
+        }
+
+        .hero-content h1 {
+            font-size: 52px;
+            line-height: 1.05;
+            margin-bottom: 22px;
+        }
+
+        .hero-content p {
+            max-width: 480px;
+            font-size: 17px;
+            line-height: 1.8;
+            color: #aaaaaa;
+        }
+
+        .system-badge {
+            display: inline-block;
+            margin-bottom: 22px;
+            padding: 9px 16px;
+            border-radius: 50px;
+            background: rgba(255, 59, 59, 0.10);
+            border: 1px solid rgba(255, 59, 59, 0.25);
+            color: #ff7777;
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        .brand-footer {
+            color: #666666;
+            font-size: 13px;
+        }
+
+        .login-side {
+            padding: 65px 55px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            background: rgba(10,10,10,0.88);
+        }
+
+        .login-side h2 {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #888888;
+            margin-bottom: 38px;
+            line-height: 1.6;
+        }
+
+        .form-group {
+            margin-bottom: 22px;
+        }
+
+        label {
+            display: block;
+            font-size: 13px;
+            font-weight: 700;
+            color: #bdbdbd;
+            margin-bottom: 9px;
+        }
+
+        input {
+            width: 100%;
+            padding: 16px 18px;
+            border-radius: 12px;
+            border: 1px solid #2c2c2c;
+            outline: none;
+            background: #111111;
+            color: white;
+            font-size: 15px;
+            transition: 0.2s;
+        }
+
+        input:focus {
+            border-color: #ff3b3b;
+            box-shadow: 0 0 0 3px rgba(255, 59, 59, 0.10);
+        }
+
+        input::placeholder {
+            color: #555555;
+        }
+
+        .login-button {
+            width: 100%;
+            margin-top: 8px;
+            padding: 16px;
+            border: none;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #ff4747, #c91414);
+            color: white;
+            font-size: 15px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: 0.25s;
+        }
+
+        .login-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 30px rgba(255, 45, 45, 0.25);
+        }
+
+        .message {
+            padding: 13px 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-size: 13px;
+        }
+
+        .error-message {
+            color: #ff8c8c;
+            background: rgba(255, 50, 50, 0.10);
+            border: 1px solid rgba(255, 70, 70, 0.20);
+        }
+
+        .logout-message {
+            color: #82e69b;
+            background: rgba(52, 211, 102, 0.08);
+            border: 1px solid rgba(52, 211, 102, 0.18);
+        }
+
+        .security-text {
+            margin-top: 28px;
+            text-align: center;
+            color: #555555;
+            font-size: 12px;
+        }
+
+        @media (max-width: 850px) {
+
+            .login-wrapper {
+                grid-template-columns: 1fr;
+            }
+
+            .brand-side {
+                display: none;
+            }
+
+            .login-side {
+                padding: 45px 30px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="login-wrapper">
+
+    <section class="brand-side">
+
+        <div class="brand-name">
+            AUTO<span>CARE</span>
+        </div>
+
+        <div class="hero-content">
+
+            <div class="system-badge">
+                VEHICLE SERVICE MANAGEMENT
+            </div>
+
+            <h1>
+                Smarter service.<br>
+                Better care.
+            </h1>
+
+            <p>
+                Manage customers, vehicles, service bookings,
+                technicians, spare parts, invoices, payments and
+                service records from one secure management platform.
+            </p>
+
+        </div>
+
+        <div class="brand-footer">
+            AutoCare Vehicle Service & Maintenance Management System
+        </div>
+
+    </section>
+
+
+    <section class="login-side">
+
+        <h2>Welcome back</h2>
+
+        <p class="subtitle">
+            Sign in to access the AutoCare management dashboard.
+        </p>
+
+        <div th:if="${param.error}"
+             class="message error-message">
+            Invalid username or password.
+        </div>
+
+        <div th:if="${param.logout}"
+             class="message logout-message">
+            You have been logged out successfully.
+        </div>
+
+        <form th:action="@{/login}" method="post">
+
+            <div class="form-group">
+                <label for="username">
+                    Username
+                </label>
+
+                <input
+                    type="text"
+                    id="username"
+                    name="username"
+                    placeholder="Enter your username"
+                    autocomplete="username"
+                    required>
+            </div>
+
+            <div class="form-group">
+                <label for="password">
+                    Password
+                </label>
+
+                <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    placeholder="Enter your password"
+                    autocomplete="current-password"
+                    required>
+            </div>
+
+            <button
+                type="submit"
+                class="login-button">
+                SIGN IN
+            </button>
+
+        </form>
+
+        <div class="security-text">
+            Secure role-based access • AutoCare Management Platform
+        </div>
+
+    </section>
+
+</div>
+
+</body>
+
+</html>

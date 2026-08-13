@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title th:text="${invoice.invoiceId == null
+            ? 'Create Invoice - AutoCare'
+            : 'Edit Invoice - AutoCare'}">
+        Invoice - AutoCare
+    </title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background-color: #f4f6f8;
+        }
+
+        .header {
+            background-color: #1f2937;
+            color: white;
+            padding: 20px 40px;
+        }
+
+        .header h1 {
+            margin: 0;
+        }
+
+        .container {
+            width: 650px;
+            margin: 40px auto;
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+        }
+
+        h2 {
+            margin-top: 0;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: bold;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        .save-button {
+            background-color: #2563eb;
+            color: white;
+            border: none;
+            padding: 11px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .save-button:hover {
+            background-color: #1d4ed8;
+        }
+
+        .cancel-button {
+            margin-left: 10px;
+            text-decoration: none;
+            color: #374151;
+        }
+
+        .cancel-button:hover {
+            text-decoration: underline;
+        }
+
+        .info-box {
+            background-color: #eff6ff;
+            padding: 12px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .warning-box {
+            background-color: #fff7ed;
+            padding: 12px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            color: #9a3412;
+        }
+    </style>
+
+</head>
+
+<body>
+
+<div class="header">
+
+    <h1>AutoCare</h1>
+
+    <p>
+        Vehicle Service & Maintenance Management System
+    </p>
+
+</div>
+
+<!-- DASHBOARD BUTTON -->
+<div th:replace="~{fragments/navigation :: homeButton}"></div>
+
+<div class="container">
+
+    <h2 th:text="${invoice.invoiceId == null
+            ? 'Create Invoice'
+            : 'Edit Invoice'}">
+        Invoice
+    </h2>
+
+    <div class="info-box">
+        <strong>Total Amount Calculation</strong>
+        <br>
+        Service Charge + Parts Total + Tax - Discount
+    </div>
+
+    <div class="warning-box">
+        One service booking can have only one invoice.
+        Select a booking that does not already have another invoice.
+    </div>
+
+    <form th:action="@{/invoices/save}"
+          th:object="${invoice}"
+          method="post">
+
+        <!-- Keep Invoice ID when editing -->
+        <input type="hidden"
+               th:field="*{invoiceId}">
+
+
+        <!-- SERVICE BOOKING -->
+
+        <div class="form-group">
+
+            <label>
+                Service Booking
+            </label>
+
+            <select th:field="*{booking.bookingId}"
+                    required>
+
+                <option value="">
+                    -- Select Booking --
+                </option>
+
+                <option th:each="booking : ${bookings}"
+                        th:value="${booking.bookingId}"
+                        th:text="${'Booking '
+                        + booking.bookingId
+                        + ' - '
+                        + booking.vehicle.registrationNo
+                        + ' - '
+                        + booking.serviceType
+                        + ' - '
+                        + booking.vehicle.customer.firstName
+                        + ' '
+                        + booking.vehicle.customer.lastName}">
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <!-- SERVICE CHARGE -->
+
+        <div class="form-group">
+
+            <label>
+                Service Charge (LKR)
+            </label>
+
+            <input type="number"
+                   th:field="*{serviceCharge}"
+                   min="0"
+                   step="0.01"
+                   placeholder="Example: 10000">
+
+        </div>
+
+
+        <!-- PARTS TOTAL -->
+
+        <div class="form-group">
+
+            <label>
+                Parts Total (LKR)
+            </label>
+
+            <input type="number"
+                   th:field="*{partsTotal}"
+                   min="0"
+                   step="0.01"
+                   placeholder="Example: 5000">
+
+        </div>
+
+
+        <!-- TAX -->
+
+        <div class="form-group">
+
+            <label>
+                Tax Amount (LKR)
+            </label>
+
+            <input type="number"
+                   th:field="*{taxAmount}"
+                   min="0"
+                   step="0.01"
+                   placeholder="Example: 1500">
+
+        </div>
+
+
+        <!-- DISCOUNT -->
+
+        <div class="form-group">
+
+            <label>
+                Discount (LKR)
+            </label>
+
+            <input type="number"
+                   th:field="*{discount}"
+                   min="0"
+                   step="0.01"
+                   placeholder="Example: 500">
+
+        </div>
+
+
+        <!-- SAVE -->
+
+        <button type="submit"
+                class="save-button"
+                th:text="${invoice.invoiceId == null
+                ? 'Create Invoice'
+                : 'Update Invoice'}">
+
+            Create Invoice
+
+        </button>
+
+
+        <!-- CANCEL -->
+
+        <a th:href="@{/invoices}"
+           class="cancel-button">
+
+            Cancel
+
+        </a>
+
+    </form>
+
+</div>
+
+</body>
+
+</html>

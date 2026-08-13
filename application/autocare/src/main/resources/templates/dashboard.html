@@ -1,0 +1,1108 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>AutoCare Dashboard</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f8;
+            color: #1f2937;
+        }
+
+        /* =========================================================
+           HEADER
+           ========================================================= */
+
+        .header {
+            background-color: #1f2937;
+            color: white;
+            padding: 22px 45px;
+
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .header-left h1 {
+            margin: 0;
+            font-size: 36px;
+        }
+
+        .header-left p {
+            margin-top: 8px;
+            margin-bottom: 0;
+        }
+
+        .header-user {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .user-info {
+            background-color: #111827;
+            border: 1px solid #374151;
+            border-radius: 10px;
+            padding: 9px 14px;
+            min-width: 160px;
+        }
+
+        .user-name {
+            font-size: 14px;
+            font-weight: bold;
+            color: white;
+        }
+
+        .user-role {
+            margin-top: 3px;
+            font-size: 11px;
+            font-weight: bold;
+            color: #f59e0b;
+            letter-spacing: 0.6px;
+        }
+
+        .logout-button {
+            border: none;
+            background-color: #dc2626;
+            color: white;
+            padding: 11px 17px;
+            border-radius: 7px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 13px;
+        }
+
+        .logout-button:hover {
+            background-color: #b91c1c;
+        }
+
+        /* =========================================================
+           MAIN CONTAINER
+           ========================================================= */
+
+        .container {
+            width: 94%;
+            margin: 30px auto;
+        }
+
+        .welcome {
+            margin-bottom: 30px;
+        }
+
+        .welcome h2 {
+            margin-bottom: 5px;
+        }
+
+        .welcome p {
+            color: #6b7280;
+        }
+
+        .role-message {
+            display: inline-block;
+            margin-top: 10px;
+            background-color: #e5e7eb;
+            color: #374151;
+            padding: 7px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        /* =========================================================
+           DATABASE LABEL
+           ========================================================= */
+
+        .section-title {
+            margin-top: 35px;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #d1d5db;
+        }
+
+        .oracle-title {
+            color: #b91c1c;
+        }
+
+        .mongo-title {
+            color: #15803d;
+        }
+
+        /* =========================================================
+           STAT CARDS
+           ========================================================= */
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns:
+                repeat(auto-fit, minmax(180px, 1fr));
+            gap: 18px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+        }
+
+        .stat-card h3 {
+            font-size: 14px;
+            color: #6b7280;
+            margin-top: 0;
+            margin-bottom: 10px;
+        }
+
+        .stat-number {
+            font-size: 30px;
+            font-weight: bold;
+        }
+
+        /* =========================================================
+           ALERT CARDS
+           ========================================================= */
+
+        .alert-grid {
+            display: grid;
+            grid-template-columns:
+                repeat(auto-fit, minmax(200px, 1fr));
+            gap: 18px;
+            margin-bottom: 35px;
+        }
+
+        .alert-card {
+            background-color: white;
+            border-left: 5px solid #f59e0b;
+            padding: 18px;
+            border-radius: 6px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.07);
+        }
+
+        .alert-card h3 {
+            margin-top: 0;
+            margin-bottom: 8px;
+            font-size: 15px;
+        }
+
+        .alert-number {
+            font-size: 27px;
+            font-weight: bold;
+        }
+
+        /* =========================================================
+           MODULE CARDS
+           ========================================================= */
+
+        .module-grid {
+            display: grid;
+            grid-template-columns:
+                repeat(auto-fit, minmax(230px, 1fr));
+            gap: 20px;
+        }
+
+        .module-card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 22px;
+            text-decoration: none;
+            color: #1f2937;
+            box-shadow: 0 2px 7px rgba(0,0,0,0.08);
+            transition: 0.2s;
+        }
+
+        .module-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 14px rgba(0,0,0,0.15);
+        }
+
+        .module-card h3 {
+            margin-top: 0;
+            margin-bottom: 8px;
+        }
+
+        .module-card p {
+            margin: 0;
+            font-size: 14px;
+            color: #6b7280;
+        }
+
+        .oracle-card {
+            border-top: 4px solid #dc2626;
+        }
+
+        .mongo-card {
+            border-top: 4px solid #16a34a;
+        }
+
+        /* =========================================================
+           DATABASE INFO
+           ========================================================= */
+
+        .database-info {
+            margin-top: 35px;
+            background-color: white;
+            border-radius: 8px;
+            padding: 22px;
+            box-shadow: 0 2px 7px rgba(0,0,0,0.07);
+        }
+
+        .database-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .database-row:last-child {
+            border-bottom: none;
+        }
+
+        .connected {
+            color: #16a34a;
+            font-weight: bold;
+        }
+
+        /* =========================================================
+           FOOTER
+           ========================================================= */
+
+        .footer {
+            margin-top: 45px;
+            background-color: #1f2937;
+            color: white;
+            text-align: center;
+            padding: 18px;
+        }
+
+        @media (max-width: 700px) {
+
+            .header {
+                padding: 20px;
+            }
+
+            .container {
+                width: 92%;
+            }
+
+            .header-user {
+                width: 100%;
+                justify-content: space-between;
+            }
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- =========================================================
+     HEADER
+     ========================================================= -->
+
+<div class="header">
+
+    <div class="header-left">
+
+        <h1>AutoCare</h1>
+
+        <p>
+            Vehicle Service & Maintenance Management System
+        </p>
+
+    </div>
+
+
+    <!-- LOGGED IN USER -->
+
+    <div class="header-user">
+
+        <div class="user-info">
+
+            <div class="user-name"
+                 th:text="${currentUsername}">
+                admin
+            </div>
+
+            <div class="user-role"
+                 th:text="${currentRole}">
+                ADMIN
+            </div>
+
+        </div>
+
+
+        <!-- LOGOUT -->
+
+        <form th:action="@{/logout}"
+              method="post"
+              style="margin:0;">
+
+            <input type="hidden"
+                   th:if="${_csrf != null}"
+                   th:name="${_csrf.parameterName}"
+                   th:value="${_csrf.token}">
+
+            <button type="submit"
+                    class="logout-button">
+                Logout
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     MAIN CONTENT
+     ========================================================= -->
+
+<div class="container">
+
+
+    <!-- WELCOME -->
+
+    <div class="welcome">
+
+        <h2>
+            AutoCare Management Dashboard
+        </h2>
+
+        <p>
+            Manage vehicle servicing, customers, payments,
+            inventory and maintenance information from one system.
+        </p>
+
+        <div class="role-message">
+
+            Signed in as
+
+            <span th:text="${currentUsername}">
+                user
+            </span>
+
+            •
+
+            <span th:text="${currentRole}">
+                ROLE
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================================================
+         SYSTEM OVERVIEW
+         ========================================================= -->
+
+    <h2 class="section-title">
+        System Overview
+    </h2>
+
+
+    <div class="alert-grid">
+
+
+        <!-- ADMIN + SERVICE ADVISOR -->
+
+        <div class="alert-card"
+             th:if="${currentRole == 'ADMIN'
+                     or currentRole == 'SERVICE_ADVISOR'}">
+
+            <h3>Pending Bookings</h3>
+
+            <div class="alert-number"
+                 th:text="${pendingBookings}">
+                0
+            </div>
+
+        </div>
+
+
+        <!-- ADMIN + INVENTORY MANAGER -->
+
+        <div class="alert-card"
+             th:if="${currentRole == 'ADMIN'
+                     or currentRole == 'INVENTORY_MANAGER'}">
+
+            <h3>Low Stock Parts</h3>
+
+            <div class="alert-number"
+                 th:text="${lowStockParts}">
+                0
+            </div>
+
+        </div>
+
+
+        <!-- ADMIN + CASHIER -->
+
+        <div class="alert-card"
+             th:if="${currentRole == 'ADMIN'
+                     or currentRole == 'CASHIER'}">
+
+            <h3>Unpaid Invoices</h3>
+
+            <div class="alert-number"
+                 th:text="${unpaidInvoices}">
+                0
+            </div>
+
+        </div>
+
+
+        <!-- ADMIN + SERVICE ADVISOR + TECHNICIAN -->
+
+        <div class="alert-card"
+             th:if="${currentRole == 'ADMIN'
+                     or currentRole == 'SERVICE_ADVISOR'
+                     or currentRole == 'TECHNICIAN'}">
+
+            <h3>Open Job Cards</h3>
+
+            <div class="alert-number"
+                 th:text="${openJobCards}">
+                0
+            </div>
+
+        </div>
+
+
+        <!-- ADMIN + SERVICE ADVISOR -->
+
+        <div class="alert-card"
+             th:if="${currentRole == 'ADMIN'
+                     or currentRole == 'SERVICE_ADVISOR'}">
+
+            <h3>Customer Complaints</h3>
+
+            <div class="alert-number"
+                 th:text="${complaintCount}">
+                0
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+    <!-- =========================================================
+         ORACLE SECTION
+         ========================================================= -->
+
+    <div th:if="${currentRole == 'ADMIN'
+                 or currentRole == 'SERVICE_ADVISOR'
+                 or currentRole == 'INVENTORY_MANAGER'
+                 or currentRole == 'CASHIER'}">
+
+
+        <h2 class="section-title oracle-title">
+            Oracle Database
+        </h2>
+
+
+        <!-- ORACLE STATISTICS -->
+
+        <div class="stats-grid">
+
+
+            <!-- CUSTOMERS -->
+
+            <div class="stat-card"
+                 th:if="${currentRole == 'ADMIN'
+                         or currentRole == 'SERVICE_ADVISOR'}">
+
+                <h3>Total Customers</h3>
+
+                <div class="stat-number"
+                     th:text="${customerCount}">
+                    0
+                </div>
+
+            </div>
+
+
+            <!-- VEHICLES -->
+
+            <div class="stat-card"
+                 th:if="${currentRole == 'ADMIN'
+                         or currentRole == 'SERVICE_ADVISOR'}">
+
+                <h3>Total Vehicles</h3>
+
+                <div class="stat-number"
+                     th:text="${vehicleCount}">
+                    0
+                </div>
+
+            </div>
+
+
+            <!-- BOOKINGS -->
+
+            <div class="stat-card"
+                 th:if="${currentRole == 'ADMIN'
+                         or currentRole == 'SERVICE_ADVISOR'}">
+
+                <h3>Service Bookings</h3>
+
+                <div class="stat-number"
+                     th:text="${bookingCount}">
+                    0
+                </div>
+
+            </div>
+
+
+            <!-- TECHNICIANS - ADMIN ONLY -->
+
+            <div class="stat-card"
+                 th:if="${currentRole == 'ADMIN'}">
+
+                <h3>Technicians</h3>
+
+                <div class="stat-number"
+                     th:text="${technicianCount}">
+                    0
+                </div>
+
+            </div>
+
+
+            <!-- SPARE PARTS -->
+
+            <div class="stat-card"
+                 th:if="${currentRole == 'ADMIN'
+                         or currentRole == 'INVENTORY_MANAGER'}">
+
+                <h3>Spare Parts</h3>
+
+                <div class="stat-number"
+                     th:text="${sparePartCount}">
+                    0
+                </div>
+
+            </div>
+
+
+            <!-- INVOICES -->
+
+            <div class="stat-card"
+                 th:if="${currentRole == 'ADMIN'
+                         or currentRole == 'CASHIER'}">
+
+                <h3>Invoices</h3>
+
+                <div class="stat-number"
+                     th:text="${invoiceCount}">
+                    0
+                </div>
+
+            </div>
+
+
+            <!-- PAYMENTS -->
+
+            <div class="stat-card"
+                 th:if="${currentRole == 'ADMIN'
+                         or currentRole == 'CASHIER'}">
+
+                <h3>Payments</h3>
+
+                <div class="stat-number"
+                     th:text="${paymentCount}">
+                    0
+                </div>
+
+            </div>
+
+
+            <!-- INVOICE ITEMS -->
+
+            <div class="stat-card"
+                 th:if="${currentRole == 'ADMIN'
+                         or currentRole == 'INVENTORY_MANAGER'
+                         or currentRole == 'CASHIER'}">
+
+                <h3>Invoice Items</h3>
+
+                <div class="stat-number"
+                     th:text="${invoiceItemCount}">
+                    0
+                </div>
+
+            </div>
+
+
+        </div>
+
+
+        <!-- =====================================================
+             ORACLE MODULES
+             ===================================================== -->
+
+        <div class="module-grid">
+
+
+            <!-- CUSTOMERS -->
+
+            <a th:if="${currentRole == 'ADMIN'
+                       or currentRole == 'SERVICE_ADVISOR'}"
+               th:href="@{/customers}"
+               class="module-card oracle-card">
+
+                <h3>Customers</h3>
+
+                <p>
+                    Add, update, view and manage customers.
+                </p>
+
+            </a>
+
+
+            <!-- VEHICLES -->
+
+            <a th:if="${currentRole == 'ADMIN'
+                       or currentRole == 'SERVICE_ADVISOR'}"
+               th:href="@{/vehicles}"
+               class="module-card oracle-card">
+
+                <h3>Vehicles</h3>
+
+                <p>
+                    Manage registered customer vehicles.
+                </p>
+
+            </a>
+
+
+            <!-- BOOKINGS -->
+
+            <a th:if="${currentRole == 'ADMIN'
+                       or currentRole == 'SERVICE_ADVISOR'}"
+               th:href="@{/bookings}"
+               class="module-card oracle-card">
+
+                <h3>Service Bookings</h3>
+
+                <p>
+                    Create and manage service appointments.
+                </p>
+
+            </a>
+
+
+            <!-- TECHNICIANS -->
+
+            <a th:if="${currentRole == 'ADMIN'}"
+               th:href="@{/technicians}"
+               class="module-card oracle-card">
+
+                <h3>Technicians</h3>
+
+                <p>
+                    Manage service technicians and specializations.
+                </p>
+
+            </a>
+
+
+            <!-- SPARE PARTS -->
+
+            <a th:if="${currentRole == 'ADMIN'
+                       or currentRole == 'INVENTORY_MANAGER'}"
+               th:href="@{/spare-parts}"
+               class="module-card oracle-card">
+
+                <h3>Spare Parts</h3>
+
+                <p>
+                    Manage spare-part inventory and stock levels.
+                </p>
+
+            </a>
+
+
+            <!-- INVOICES -->
+
+            <a th:if="${currentRole == 'ADMIN'
+                       or currentRole == 'CASHIER'}"
+               th:href="@{/invoices}"
+               class="module-card oracle-card">
+
+                <h3>Invoices</h3>
+
+                <p>
+                    Generate and manage customer invoices.
+                </p>
+
+            </a>
+
+
+            <!-- INVOICE ITEMS -->
+
+            <a th:if="${currentRole == 'ADMIN'
+                       or currentRole == 'INVENTORY_MANAGER'
+                       or currentRole == 'CASHIER'}"
+               th:href="@{/invoice-items}"
+               class="module-card oracle-card">
+
+                <h3>Invoice Items</h3>
+
+                <p>
+                    Manage spare parts included in invoices.
+                </p>
+
+            </a>
+
+
+            <!-- PAYMENTS -->
+
+            <a th:if="${currentRole == 'ADMIN'
+                       or currentRole == 'CASHIER'}"
+               th:href="@{/payments}"
+               class="module-card oracle-card">
+
+                <h3>Payments</h3>
+
+                <p>
+                    Record and manage customer payments.
+                </p>
+
+            </a>
+
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================================================
+         MONGODB SECTION
+         ========================================================= -->
+
+    <div th:if="${currentRole == 'ADMIN'
+                 or currentRole == 'SERVICE_ADVISOR'
+                 or currentRole == 'TECHNICIAN'}">
+
+
+        <h2 class="section-title mongo-title">
+            MongoDB
+        </h2>
+
+
+        <!-- MONGODB STATISTICS -->
+
+        <div class="stats-grid">
+
+
+            <!-- JOB CARDS -->
+
+            <div class="stat-card"
+                 th:if="${currentRole == 'ADMIN'
+                         or currentRole == 'SERVICE_ADVISOR'
+                         or currentRole == 'TECHNICIAN'}">
+
+                <h3>Job Cards</h3>
+
+                <div class="stat-number"
+                     th:text="${jobCardCount}">
+                    0
+                </div>
+
+            </div>
+
+
+            <!-- TECHNICIAN NOTES -->
+
+            <div class="stat-card"
+                 th:if="${currentRole == 'ADMIN'
+                         or currentRole == 'TECHNICIAN'}">
+
+                <h3>Technician Notes</h3>
+
+                <div class="stat-number"
+                     th:text="${technicianNoteCount}">
+                    0
+                </div>
+
+            </div>
+
+
+            <!-- SERVICE HISTORY -->
+
+            <div class="stat-card"
+                 th:if="${currentRole == 'ADMIN'
+                         or currentRole == 'SERVICE_ADVISOR'
+                         or currentRole == 'TECHNICIAN'}">
+
+                <h3>Service History</h3>
+
+                <div class="stat-number"
+                     th:text="${serviceHistoryCount}">
+                    0
+                </div>
+
+            </div>
+
+
+            <!-- COMPLAINTS -->
+
+            <div class="stat-card"
+                 th:if="${currentRole == 'ADMIN'
+                         or currentRole == 'SERVICE_ADVISOR'}">
+
+                <h3>Complaints & Feedback</h3>
+
+                <div class="stat-number"
+                     th:text="${complaintFeedbackCount}">
+                    0
+                </div>
+
+            </div>
+
+
+            <!-- DIAGNOSTICS -->
+
+            <div class="stat-card"
+                 th:if="${currentRole == 'ADMIN'
+                         or currentRole == 'TECHNICIAN'}">
+
+                <h3>Diagnostic Summaries</h3>
+
+                <div class="stat-number"
+                     th:text="${diagnosticCount}">
+                    0
+                </div>
+
+            </div>
+
+
+        </div>
+
+
+        <!-- =====================================================
+             MONGODB MODULES
+             ===================================================== -->
+
+        <div class="module-grid">
+
+
+            <!-- JOB CARDS -->
+
+            <a th:if="${currentRole == 'ADMIN'
+                       or currentRole == 'SERVICE_ADVISOR'
+                       or currentRole == 'TECHNICIAN'}"
+               th:href="@{/job-cards}"
+               class="module-card mongo-card">
+
+                <h3>Job Cards</h3>
+
+                <p>
+                    Manage vehicle maintenance job cards.
+                </p>
+
+            </a>
+
+
+            <!-- TECHNICIAN NOTES -->
+
+            <a th:if="${currentRole == 'ADMIN'
+                       or currentRole == 'TECHNICIAN'}"
+               th:href="@{/technician-notes}"
+               class="module-card mongo-card">
+
+                <h3>Technician Notes</h3>
+
+                <p>
+                    Store technician observations and service notes.
+                </p>
+
+            </a>
+
+
+            <!-- SERVICE HISTORY -->
+
+            <a th:if="${currentRole == 'ADMIN'
+                       or currentRole == 'SERVICE_ADVISOR'
+                       or currentRole == 'TECHNICIAN'}"
+               th:href="@{/service-history}"
+               class="module-card mongo-card">
+
+                <h3>Service History</h3>
+
+                <p>
+                    View historical vehicle maintenance records.
+                </p>
+
+            </a>
+
+
+            <!-- COMPLAINTS -->
+
+            <a th:if="${currentRole == 'ADMIN'
+                       or currentRole == 'SERVICE_ADVISOR'}"
+               th:href="@{/complaints-feedback}"
+               class="module-card mongo-card">
+
+                <h3>Complaints & Feedback</h3>
+
+                <p>
+                    Manage customer complaints and feedback.
+                </p>
+
+            </a>
+
+
+            <!-- DIAGNOSTICS -->
+
+            <a th:if="${currentRole == 'ADMIN'
+                       or currentRole == 'TECHNICIAN'}"
+               th:href="@{/diagnostic-summaries}"
+               class="module-card mongo-card">
+
+                <h3>Diagnostic Summaries</h3>
+
+                <p>
+                    Store vehicle diagnostics and error codes.
+                </p>
+
+            </a>
+
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================================================
+         DATABASE INFORMATION
+         ========================================================= -->
+
+    <div class="database-info">
+
+        <h2>
+            System Information
+        </h2>
+
+
+        <div class="database-row">
+
+            <span>
+                Logged-in User
+            </span>
+
+            <strong th:text="${currentUsername}">
+                user
+            </strong>
+
+        </div>
+
+
+        <div class="database-row">
+
+            <span>
+                Access Role
+            </span>
+
+            <strong th:text="${currentRole}">
+                ROLE
+            </strong>
+
+        </div>
+
+
+        <div class="database-row">
+
+            <span>
+                Oracle Database
+            </span>
+
+            <span class="connected">
+                Connected
+            </span>
+
+        </div>
+
+
+        <div class="database-row">
+
+            <span>
+                MongoDB
+            </span>
+
+            <span class="connected">
+                Connected
+            </span>
+
+        </div>
+
+
+        <div class="database-row">
+
+            <span>
+                Application Framework
+            </span>
+
+            <span>
+                Spring Boot
+            </span>
+
+        </div>
+
+
+        <div class="database-row">
+
+            <span>
+                Application Port
+            </span>
+
+            <span>
+                8080
+            </span>
+
+        </div>
+
+    </div>
+
+
+</div>
+
+
+<!-- =========================================================
+     FOOTER
+     ========================================================= -->
+
+<div class="footer">
+
+    AutoCare Vehicle Service & Maintenance Management System
+
+</div>
+
+
+</body>
+
+</html>
